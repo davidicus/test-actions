@@ -1,0 +1,33 @@
+name: Update Version
+
+on:
+  workflow_run:
+    workflows: [Hello World]
+    types:
+      - completed
+
+jobs:
+  update_version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACTIONS_BOT_PAT }}
+
+      - name: Run versioning script
+        run: ./.github/scripts/versioning.sh
+
+      - name: Check status, stage, and push changes
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git status
+          git add .
+          git commit -m "chore: update version [skip ci]"
+          git push

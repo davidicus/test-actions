@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.ACTIONS_BOT_PAT }}
 
       - name: Run versioning script
         run: ./.github/scripts/versioning.sh
